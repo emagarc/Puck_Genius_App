@@ -1,6 +1,7 @@
 "use client"
 
 import axios from "axios";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
@@ -24,6 +25,7 @@ import { cn } from "@/lib/utils";
 
 
 const ImagePage = () => {
+    const proModal = useProModal();
     const router = useRouter();
     const [images, setImages] = useState<string[]>([]);
     
@@ -50,8 +52,9 @@ const ImagePage = () => {
             form.reset();
 
         } catch (error: any) {
-            // TODO: open pro Modal
-            console.log(error);
+            if (error?.response?.status === 403) {
+                proModal.onOpen();
+            }
         } finally {
             router.refresh();
         }

@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ChatCompletionRequestMessage } from "openai";
@@ -25,6 +26,7 @@ import { cn } from "@/lib/utils";
 
 
 const CodePage = () => {
+    const proModal = useProModal();
     const router = useRouter();
     const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
 
@@ -55,8 +57,9 @@ const CodePage = () => {
             form.reset();
 
         } catch (error: any) {
-            // TODO: open pro Modal
-            console.log(error);
+            if (error?.response?.status === 403) {
+                proModal.onOpen();
+            }
         } finally {
             router.refresh();
         }
