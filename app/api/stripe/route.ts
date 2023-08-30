@@ -5,6 +5,7 @@ import prismadb from "@/lib/prismadb";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
 
+
 const settingsUrl = absoluteUrl("/settings");
 
 export async function GET() {
@@ -63,6 +64,6 @@ export async function GET() {
 
     } catch (error) {
         console.log("[STRIPE_ERROR]", error);
-        return NextResponse("Internal error", {status: 500});
+        return new NextResponse("Internal error", {status: 500});
     }
 }

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useProModal } from "@/hooks/use-pro-modal";
 import { ChatCompletionRequestMessage } from "openai";
+import { toast } from "react-hot-toast";
 
 import * as z from "zod";
 import { Music } from "lucide-react";
@@ -48,6 +49,8 @@ const MusicPage = () => {
         } catch (error: any) {
             if (error?.response?.status === 403) {
                 proModal.onOpen();
+            } else {
+                toast.error("Something went wrong");
             }
         } finally {
             router.refresh();
