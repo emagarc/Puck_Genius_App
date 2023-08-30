@@ -15,6 +15,24 @@ export async function GET() {
         if (!userId || !user) {
             return new NextResponse("Unauthorized", { status: 401});
         }
+
+        const userSubscription = await prismadb.userSubscription.findUnique({
+            where: {
+                userId
+            }
+        });
+
+        if (userSubscription && userSubscription.stripeCustomerId) {
+            const stripeSession = await stripe.billingPortal.sessions.create({
+                customer: userSubscription.stripeCustomerId,
+                return_url: settingsUrl,
+            });
+
+            return new NextResponse(JSON.stringify({ url: stripeSession.url }));
+        }
+
+        
+
     } catch (error) {
         console.log("[STRIPE_ERROR]", error);
         return NextResponse("Internal error", {status: 500});
